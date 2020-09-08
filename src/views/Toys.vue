@@ -1,19 +1,47 @@
 <template>
   <div>
     <v-container>
+      <form @submit.prevent="submitForm">
+        <v-text-field
+          v-model="currentToy.data.name"
+          label="Name"
+        ></v-text-field>
+
+        <v-text-field
+          v-model="currentToy.data.price"
+          label="Price"
+        ></v-text-field>
+
+        <v-text-field
+          v-model="currentToy.data.stock"
+          label="Stock"
+        ></v-text-field>
+
+        <v-text-field
+          v-model="currentToy.data.code"
+          label="Code"
+        ></v-text-field>
+
+        <div class="mb-5">   
+          <v-btn class="mr-4 red darken-4" dark>{{currentToy.id ? 'Editar' : 'Ingresar nuevo' }}</v-btn>
+        </div>
+      </form>
+
       <v-simple-table>
-        <tr class="deep-orange lighten-3 pt-2 pb-3" heigth="100vh" fixed-header>
+        <tr class="deep-orange lighten-3">
           <th class="text-left">NAME</th>
           <th class="text-left">PRICE</th>
           <th class="text-left">CODE</th>
           <th class="text-left">STOCK</th>
         </tr>
         <tbody>
-          <tr v-for="toy in toys" :key="toy.id">
+          <tr v-for="toy in toys" :key="toy.id" class="mt-2">
             <th>{{ toy.data.name }}</th>
             <th>{{ toy.data.price }}</th>
             <th>{{ toy.data.code }}</th>
             <th>{{ toy.data.stock }}</th>
+            <v-btn class="green darken-2" dark>Modificar</v-btn>
+            <v-btn class="green darken-4" dark>Eliminar</v-btn>
           </tr>
         </tbody>
       </v-simple-table>
@@ -25,6 +53,19 @@
 import {mapActions, mapState} from 'vuex'
 
 export default {
+  data() {
+    return {
+      currentToy: {
+        id: undefined,
+        data: {
+          name: '',
+          price: '',
+          stock: '',
+          code:''
+        }
+      }
+    }
+  },
     created() {
       this.setToys()
     },
@@ -32,7 +73,31 @@ export default {
       ...mapState(['toys'])
     },
     methods : {
-      ...mapActions(['setToys'])
+      ...mapActions(['setToys', 'submitToy']),
+      submitForm() {
+      if (this.currentToy.id) { //si existe editamos
+        this.$emit('edit-Toy', this.currentToy)
+      } else { // si no existe creamos una nueva cerveza
+        this.createToy()
+      }
+      this.cleanCurrentToy()
+    },
+    createToy() {
+      const toy = {
+        name: this.currentToy.data.name,
+        price: this.currentToy.data.price,
+        stock: this.currentToy.data.stock,
+        code: this.currentToy.data.code,
+      }
+      this.submitToy(toy) // metodo del store que hace la llamada a axiosApi
+    },
+    cleanCurrentToy() {
+      this.currentToy.data.name = '',
+      this.currentToy.data.price = 0,
+      this.currentToy.data.stock = '',
+      this.currentToy.data.code = '',
+      this.currentBeer.id = undefined
+    }
     }
   }
 </script>

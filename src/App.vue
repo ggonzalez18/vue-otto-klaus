@@ -12,7 +12,7 @@
       <router-view></router-view>
     </v-main>
 
-    <v-footer absolute class="font-weight-medium blue-grey darken-4" dark>
+    <v-footer class="font-weight-medium blue-grey darken-4" dark>
         <v-col class="text-center" cols="12" dark>
           {{ new Date().getFullYear() }} — Juguetería mis jueguetes
         </v-col>
