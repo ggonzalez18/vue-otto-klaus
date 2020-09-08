@@ -1,11 +1,13 @@
 <template>
   <div class="home">
-    <login></login>
+    <!-- <v-img height="100vh" :src="image> -->
+      <login></login>
+    <!-- </v-img> -->
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
+
 import Login from '@/components/Login.vue'
 
 export default {
@@ -15,3 +17,4 @@ export default {
   }
 }
 </script>
+

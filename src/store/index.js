@@ -31,7 +31,7 @@ export default new Vuex.Store({
       })
     },
     setToy({ commit }, id) { //commit llama a mutaciones
-      Axios.get(`https://us-central1-ottoklauss-5927c.cloudfunctions.net/toys/toys${id}`).then((response) => {
+      Axios.get(`https://us-central1-ottoklauss-5927c.cloudfunctions.net/toys/toys/${id}`).then((response) => {
         commit('SET_TOY', response.data)
       })
     },
