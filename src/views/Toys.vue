@@ -3,6 +3,7 @@
     <v-container>
       <v-row>
         <v-col cols="12" sm="4" lg="4" md="4">
+          <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details></v-text-field>
           <form class="mx-4 px-1">
             <v-text-field
               v-model="currentToy.data.name"
@@ -39,7 +40,7 @@
               <th></th>
             </tr>
             <tbody>
-              <tr v-for="toy in toys" :key="toy.id" class="mt-2">
+              <tr v-for="toy in filterList" :key="toy.id" class="mt-2">
                 <th>{{ toy.data.name }}</th>
                 <th>{{ toy.data.price }}</th>
                 <th>{{ toy.data.code }}</th>
@@ -64,6 +65,7 @@ import {mapActions, mapState} from 'vuex'
 export default {
   data() {
     return {
+      search: '',
       currentToy: {
         id: undefined,
         data: {
@@ -71,7 +73,7 @@ export default {
           price: 0,
           stock: 0,
           code:''
-        }
+        },
       }
     }
   },
@@ -79,7 +81,12 @@ export default {
       this.setToys()
     },
     computed: {
-      ...mapState(['toys', 'overlay'])
+      ...mapState(['toys', 'overlay']),
+      filterList() { //funcion para filtrar y buscar un juguete
+        return this.toys.filter((toy) => {
+          return toy.data.name.toLowerCase().includes(this.search.toLowerCase())
+        })
+      }
     },
     methods : {
       ...mapActions(['setToys', 'submitToy', 'updateToy', 'deleteToy']),
