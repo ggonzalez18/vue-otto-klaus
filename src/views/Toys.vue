@@ -25,7 +25,7 @@
             ></v-text-field>
 
             <div class="mb-5">   
-              <v-btn class="mr-4 red darken-4" dark>{{currentToy.id ? 'Editar' : 'Ingresar nuevo' }}</v-btn>
+              <v-btn @click="submitform" class="mr-4 red darken-4" dark>{{currentToy.id ? 'Editar' : 'Ingresar nuevo' }}</v-btn>
             </div>
           </form>
         </v-col>
@@ -45,9 +45,7 @@
                 <th>{{ toy.data.code }}</th>
                 <th>{{ toy.data.stock }}</th>
                 <td><v-icon @click="editProduct(toy)" color="green darken-4">mdi-pencil-outline</v-icon></td>
-                <td><v-icon @click="cleanCurrentToy"  color="red accent-4">mdi-delete</v-icon></td>
-                <!-- <v-btn @click="setCurrentToy(toy)" class="green darken-2 mx-2" dark>Modificar</v-btn>
-                <v-btn class="green darken-4 mx-2" dark>Eliminar</v-btn> -->
+                <td><v-icon @click="removeToy(toy.id)" color="red accent-4">mdi-delete</v-icon></td>
               </tr>
             </tbody>
           </v-simple-table>
@@ -70,8 +68,8 @@ export default {
         id: undefined,
         data: {
           name: '',
-          price: '',
-          stock: '',
+          price: 0,
+          stock: 0,
           code:''
         }
       }
@@ -84,12 +82,12 @@ export default {
       ...mapState(['toys', 'overlay'])
     },
     methods : {
-      ...mapActions(['setToys', 'submitToy']),
+      ...mapActions(['setToys', 'submitToy', 'updateToy', 'deleteToy']),
       submitform() {
       if (!this.currentToy.id) { //si no existe creamos
         this.createToy()
       } else { // si no existe actualizamos
-        this.updateToy()
+        this.update(this.currentToy)
       }
       },
       createToy() {
@@ -100,28 +98,28 @@ export default {
       cleanCurrentToy() {
         this.currentToy.data.name = '',
         this.currentToy.data.price = 0,
-        this.currentToy.data.stock = '',
+        this.currentToy.data.stock = 0,
         this.currentToy.data.code = '',
         this.currentToy.id = undefined
       },
       editProduct(toy) {
-        let toEdit = {...toy}
-        this.currentToy = toEdit
+        this.currentToy.data.name = toy.data.name,
+        this.currentToy.data.price = toy.data.price,
+        this.currentToy.data.stock = toy.data.stock,
+        this.currentToy.data.code = toy.data.code,
+        this.currentToy.id = toy.id
+      },
+      update() {
+        this.updateToy(this.currentToy)
+        this.cleanCurrentToy()
+      },
+      removeToy(id) {
+        let confirmation = confirm("¿respuesta definitiva?")
+        if (confirmation) {
+          this.deleteToy(id)
+          this.cleanCurrentToy()
+        }
       }
-      // beerUpdate(beer) {
-      //   const newBeer = {
-      //     data: {
-      //       name: beer.data.name,
-      //       price: beer.data.price,
-      //       picture: beer.data.picture
-      //     },
-      //     id: beer.id
-      //   }
-      //   this.updateBeer(newBeer),
-      //   this.currentBeer.data.name = '',
-      //   this.currentBeer.data.price= 0,
-      //   this.currentBeer.data.picture = ''
-      // }
     }
   }
 </script>

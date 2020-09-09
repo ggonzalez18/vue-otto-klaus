@@ -33,7 +33,7 @@ export default new Vuex.Store({
       commit('SET_USER', user)
     },
     setToys({ commit }) {
-      Axios.get('https://us-central1-ottoklauss-5927c.cloudfunctions.net/toys/toys').then((response) => {
+      Axios.get('https://us-central1-ottoklauss-5927c.cloudfunctions.net/toys/toys/').then((response) => {
         commit('SET_TOYS', response.data)
       })
     },
@@ -45,15 +45,20 @@ export default new Vuex.Store({
       })
     },
     submitToy({ dispatch }, toy) { //dispach llama a otras acciones NO A MUTACIONES
-      Axios.post('https://us-central1-ottoklauss-5927c.cloudfunctions.net/toys/toy', toy).then(() => {
+      Axios.post('https://us-central1-ottoklauss-5927c.cloudfunctions.net/toys/toy/', toy).then(() => {
         dispatch('setToys')
       })
     },
-    // deleteToy({ dispatch }, id) {
-    //   Axios.delete(`https://us-central1-ottoklauss-5927c.cloudfunctions.net/toys/toys${id}`).then(() => {
-    //     dispatch('setToy') // dispach llama a las otra acciones
-    //   })
-    // },
+    updateToy({ dispatch }, toy) {
+      Axios.put(`https://us-central1-ottoklauss-5927c.cloudfunctions.net/toys/toy/${toy.id}`, toy.data).then(() => {
+        dispatch('setToys')
+      })
+    },
+    deleteToy({ dispatch }, id) {
+      Axios.delete(`https://us-central1-ottoklauss-5927c.cloudfunctions.net/toys/toy/${id}`).then(() => {
+        dispatch('setToys') // dispach llama a las otra acciones
+      })
+    },
   },
   modules: {
   }

@@ -3,9 +3,9 @@
       <v-app-bar app color="blue-grey darken-4 mb-5" dark>
         <!-- <v-toolbar-title>Edutecno</v-toolbar-title> -->
         <v-spacer></v-spacer>
-        <v-btn to="/" text>Home</v-btn>
-        <v-btn to="/toys" text>Toys</v-btn>
-        <v-btn @click.prevent="logout" to="/toys" text v-if="currentUser">Cerrar sesión</v-btn>
+        <v-btn to="/" text class="mx-2">Home</v-btn>
+        <v-btn to="/toys" text class="mx-2">Toys</v-btn>
+        <v-btn @click.prevent="logout" to="/toys" text v-if="currentUser" class="mx-2">Cerrar sesión</v-btn>
       </v-app-bar>
 
       <v-main>
