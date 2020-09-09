@@ -2,8 +2,8 @@
   <div>
     <v-container>
       <v-row>
-        <v-cols cols="12" sm="6" lg="6" md="6">
-          <form @submit.prevent="submitForm" class="mx-4 px-1">
+        <v-col cols="12" sm="4" lg="4" md="4">
+          <form class="mx-4 px-1">
             <v-text-field
               v-model="currentToy.data.name"
               label="Name"
@@ -28,14 +28,15 @@
               <v-btn class="mr-4 red darken-4" dark>{{currentToy.id ? 'Editar' : 'Ingresar nuevo' }}</v-btn>
             </div>
           </form>
-        </v-cols>
-        <v-cols cols="12" sm="6" lg="6" md="6">
+        </v-col>
+        <v-col cols="12" sm="8" lg="8" md="8">
           <v-simple-table class="mx-4 px-1">
             <tr class="deep-orange lighten-3">
               <th class="text-left">NAME</th>
               <th class="text-left">PRICE</th>
               <th class="text-left">CODE</th>
               <th class="text-left">STOCK</th>
+              <th></th>
             </tr>
             <tbody>
               <tr v-for="toy in toys" :key="toy.id" class="mt-2">
@@ -43,12 +44,17 @@
                 <th>{{ toy.data.price }}</th>
                 <th>{{ toy.data.code }}</th>
                 <th>{{ toy.data.stock }}</th>
-                <v-btn class="green darken-2 mx-2" dark>Modificar</v-btn>
-                <v-btn class="green darken-4 mx-2" dark>Eliminar</v-btn>
+                <td><v-icon @click="editProduct(toy)" color="green darken-4">mdi-pencil-outline</v-icon></td>
+                <td><v-icon @click="cleanCurrentToy"  color="red accent-4">mdi-delete</v-icon></td>
+                <!-- <v-btn @click="setCurrentToy(toy)" class="green darken-2 mx-2" dark>Modificar</v-btn>
+                <v-btn class="green darken-4 mx-2" dark>Eliminar</v-btn> -->
               </tr>
             </tbody>
           </v-simple-table>
-        </v-cols>
+        </v-col>
+        <v-overlay :value="overlay">
+          <v-progress-circular indeterminate size="64"></v-progress-circular>
+        </v-overlay>
       </v-row>
     </v-container>
   </div>
@@ -75,34 +81,47 @@ export default {
       this.setToys()
     },
     computed: {
-      ...mapState(['toys'])
+      ...mapState(['toys', 'overlay'])
     },
     methods : {
       ...mapActions(['setToys', 'submitToy']),
-      submitToy() {
-      if (this.currentToy.id) { //si existe editamos
-        this.$emit('edit-Toy', this.currentToy)
-      } else { // si no existe creamos una nueva cerveza
+      submitform() {
+      if (!this.currentToy.id) { //si no existe creamos
         this.createToy()
+      } else { // si no existe actualizamos
+        this.updateToy()
       }
-      this.cleanCurrentToy()
-    },
-    createToy() {
-      const toy = {
-        name: this.currentToy.data.name,
-        price: this.currentToy.data.price,
-        stock: this.currentToy.data.stock,
-        code: this.currentToy.data.code,
+      },
+      createToy() {
+        const toy = this.currentToy.data //los llama a todos de una
+        this.submitToy(toy) // metodo del store que hace la llamada a axiosApi
+        this.cleanCurrentToy()
+      },
+      cleanCurrentToy() {
+        this.currentToy.data.name = '',
+        this.currentToy.data.price = 0,
+        this.currentToy.data.stock = '',
+        this.currentToy.data.code = '',
+        this.currentToy.id = undefined
+      },
+      editProduct(toy) {
+        let toEdit = {...toy}
+        this.currentToy = toEdit
       }
-      this.submitToy(toy) // metodo del store que hace la llamada a axiosApi
-    },
-    cleanCurrentToy() {
-      this.currentToy.data.name = '',
-      this.currentToy.data.price = 0,
-      this.currentToy.data.stock = '',
-      this.currentToy.data.code = '',
-      this.currentBeer.id = undefined
-    }
+      // beerUpdate(beer) {
+      //   const newBeer = {
+      //     data: {
+      //       name: beer.data.name,
+      //       price: beer.data.price,
+      //       picture: beer.data.picture
+      //     },
+      //     id: beer.id
+      //   }
+      //   this.updateBeer(newBeer),
+      //   this.currentBeer.data.name = '',
+      //   this.currentBeer.data.price= 0,
+      //   this.currentBeer.data.picture = ''
+      // }
     }
   }
 </script>

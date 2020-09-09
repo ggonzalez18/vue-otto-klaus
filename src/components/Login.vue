@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card width="400px" class="mx-auto mt-5" color="deep-orange darken-3" dark>
+    <v-card width="400px" class="mx-auto mt-5" color="red darken-1" dark>
       <v-card-title><h1 class="mx-auto">Login</h1></v-card-title>
       <v-card-text>
         <v-form>
